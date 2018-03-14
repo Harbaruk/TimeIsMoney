@@ -1,11 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Converters;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Text;
+using TimeIsMoney.Api.Attributes;
+using TimeIsMoney.Common;
+using TimeIsMoney.CompositionRoot;
+using TimeIsMoney.Crypto;
 using TimeIsMoney.DataAccess;
 using TimeIsMoney.Extensions;
 using TimeIsMoney.Services.Crypto;
@@ -25,7 +34,22 @@ namespace TimeIsMoney
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter
+                {
+                    AllowIntegerValues = false,
+                    CamelCaseText = false
+                });
+                options.SerializerSettings.DateParseHandling = Newtonsoft.Json.DateParseHandling.DateTimeOffset;
+                options.SerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
+                options.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Local;
+            })
+          .AddFluentValidation(o =>
+          {
+              o.RegisterValidatorsFromAssemblyContaining<Startup>();
+          });
+
             services.AddCors(o => o.AddPolicy("CORS", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -33,7 +57,12 @@ namespace TimeIsMoney
                        .AllowAnyHeader();
             }));
 
+            Bootstrap.RegisterServices(services);
+            services.AddScoped(typeof(DomainTaskStatus));
+            services.AddScoped(typeof(ValidateModelAttribute));
+            services.AddSingleton<ICryptoContext, AspNetCryptoContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddDbContext<TimeInMoneyContext>(o =>
             {
                 string connStr = Configuration.GetConnectionString(_hostingEnvironment.EnvironmentName);
@@ -52,6 +81,22 @@ namespace TimeIsMoney
                 }));
 
             services.ConfigureFromSection<CryptoOptions>(Configuration);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+         .AddJwtBearer(options =>
+         {
+             options.TokenValidationParameters = new TokenValidationParameters
+             {
+                 ValidateIssuer = true,
+                 ClockSkew = TimeSpan.Zero,
+                 ValidateAudience = true,
+                 ValidateLifetime = true,
+                 ValidateIssuerSigningKey = true,
+                 ValidIssuer = Configuration.GetSection("Jwt")["ValidIssuer"],
+                 ValidAudience = Configuration.GetSection("Jwt")["ValidAudience"],
+                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("Jwt")["Key"]))
+             };
+         });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -60,9 +105,18 @@ namespace TimeIsMoney
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors("CORS");
+
+            app.UseAuthentication();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TIM V1"));
+
+            app.UseStaticFiles();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PTS V1");
+            });
 
             app.UseMvc();
         }
