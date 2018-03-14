@@ -18,6 +18,7 @@ using TimeIsMoney.Crypto;
 using TimeIsMoney.DataAccess;
 using TimeIsMoney.Extensions;
 using TimeIsMoney.Services.Crypto;
+using TimeIsMoney.Services.Token;
 
 namespace TimeIsMoney
 {
@@ -81,6 +82,7 @@ namespace TimeIsMoney
                 }));
 
             services.ConfigureFromSection<CryptoOptions>(Configuration);
+            services.ConfigureFromSection<JwtOptions>(Configuration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
          .AddJwtBearer(options =>
