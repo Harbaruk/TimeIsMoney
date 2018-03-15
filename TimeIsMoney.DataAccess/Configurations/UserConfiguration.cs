@@ -17,6 +17,7 @@ namespace TimeIsMoney.DataAccess.Configurations
             builder.Property(x => x.Salt).IsRequired();
             builder.Property(x => x.Role).IsRequired();
             builder.Property(x => x.Email).IsRequired();
+            builder.HasOne(x => x.ConfirmationCode).WithOne(x => x.User);
         }
     }
 }
