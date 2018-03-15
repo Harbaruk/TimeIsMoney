@@ -12,12 +12,15 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Text;
 using TimeIsMoney.Api.Attributes;
+using TimeIsMoney.Api.Providers;
 using TimeIsMoney.Common;
+using TimeIsMoney.Common.EmailSender;
 using TimeIsMoney.CompositionRoot;
 using TimeIsMoney.Crypto;
 using TimeIsMoney.DataAccess;
 using TimeIsMoney.Extensions;
 using TimeIsMoney.Services.Crypto;
+using TimeIsMoney.Services.ProviderAbstraction;
 using TimeIsMoney.Services.Token;
 
 namespace TimeIsMoney
@@ -61,6 +64,7 @@ namespace TimeIsMoney
             Bootstrap.RegisterServices(services);
             services.AddScoped(typeof(DomainTaskStatus));
             services.AddScoped(typeof(ValidateModelAttribute));
+            services.AddScoped<IAuthenticaterUserProvider, AuthenticatedUserProvider>();
             services.AddSingleton<ICryptoContext, AspNetCryptoContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -83,6 +87,8 @@ namespace TimeIsMoney
 
             services.ConfigureFromSection<CryptoOptions>(Configuration);
             services.ConfigureFromSection<JwtOptions>(Configuration);
+            services.ConfigureFromSection<RedirectOptions>(Configuration);
+            services.ConfigureFromSection<EmailOptions>(Configuration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
          .AddJwtBearer(options =>
