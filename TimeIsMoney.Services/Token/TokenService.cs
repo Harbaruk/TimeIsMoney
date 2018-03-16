@@ -36,7 +36,7 @@ namespace TimeIsMoney.Services.Token
 
         public TokenModel GetToken(LoginCredentialsModel loginCredentials)
         {
-            var user = _unitOfWork.Repository<UserEntity>().Set.FirstOrDefault(x => x.Email == loginCredentials.Login);
+            var user = _unitOfWork.Repository<UserEntity>().Set.FirstOrDefault(x => x.Email == loginCredentials.Email);
 
             if (user == null)
             {

@@ -2,18 +2,22 @@
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using TimeIsMoney.Common.EmailSender.Models;
 
 namespace TimeIsMoney.Common.EmailSender
 {
     public class EmailSender : IEmailSender
     {
         private readonly IOptions<EmailOptions> _options;
+        private readonly IOptions<RedirectOptions> _redirecOptions;
         private readonly string _templatesFolder;
 
-        public EmailSender(IOptions<EmailOptions> options)
+        public EmailSender(IOptions<EmailOptions> options, IOptions<RedirectOptions> redirectOptions)
         {
             _options = options;
+            _redirecOptions = redirectOptions;
             _templatesFolder = Environment.CurrentDirectory + "\\Templates\\";
         }
 
@@ -48,12 +52,13 @@ namespace TimeIsMoney.Common.EmailSender
 
         public void Confirmation(EmailConfirmModel receiver)
         {
-            var link = _redirectOptions.Value.RedirectUrl + $"/auth/confirm?guid={receiver.Code}";
+            var link = _redirecOptions.Value.RedirectUrl + $"/auth/confirm?guid={receiver.Code}";
             string html = File.ReadAllText(_templatesFolder + EmailFiles.Invitation)
                 .Replace("{TITLE}", "PTS")
                 .Replace("{LINK}", link)
-                .Replace("{NAME}", emailConfirm.Firstname + " " + emailConfirm.Lastname);
+                .Replace("{NAME}", receiver.Firstname + " " + receiver.Lastname);
 
-            SendMail(emailConfirm.Email, null, html);
+            SendMail(receiver.Email, null, html);
         }
     }
+}

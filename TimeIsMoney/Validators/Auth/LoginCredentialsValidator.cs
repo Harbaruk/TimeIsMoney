@@ -15,7 +15,7 @@ namespace TimeIsMoney.Api.Validators.Auth
             RuleFor(x => x.Password)
                 .SetValidator(new PasswordValidator());
 
-            RuleFor(x => x.Password)
+            RuleFor(x => x.Email)
                 .EmailAddress()
                 .WithMessage("Invalid email address");
         }

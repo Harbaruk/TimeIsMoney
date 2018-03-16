@@ -22,7 +22,7 @@ namespace TimeIsMoney.Api.Controllers
         [HttpPost]
         [Route("register")]
         [ServiceFilter(typeof(ValidateModelAttribute))]
-        public IActionResult Register(UserRegistrationModel userRegistration)
+        public IActionResult Register([FromBody]UserRegistrationModel userRegistration)
         {
             _authService.Register(userRegistration);
             if (!_taskStatus.HasErrors)
