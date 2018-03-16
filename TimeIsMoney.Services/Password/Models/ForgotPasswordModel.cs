@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TimeIsMoney.Services.Password.Models
+﻿namespace TimeIsMoney.Services.Password.Models
 {
-    class ForgotPasswordModel
+    public class ForgotPasswordModel
     {
+        public string Email { get; set; }
     }
 }
