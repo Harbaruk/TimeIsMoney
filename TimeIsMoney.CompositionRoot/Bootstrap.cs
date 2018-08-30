@@ -2,6 +2,7 @@
 using TimeIsMoney.DataAccess;
 using TimeIsMoney.Services.Auth;
 using TimeIsMoney.Services.Token;
+using TimeIsMoney.Services.TransactionType;
 
 namespace TimeIsMoney.CompositionRoot
 {
@@ -13,6 +14,8 @@ namespace TimeIsMoney.CompositionRoot
             serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             serviceCollection.AddScoped<ITokenService, TokenService>();
             serviceCollection.AddScoped<IAuthService, AuthService>();
+
+            serviceCollection.AddScoped<ITransactionTypeService, TransactionTypeService>();
         }
     }
 }

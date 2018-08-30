@@ -124,7 +124,7 @@ namespace TimeIsMoney
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PTS V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TIM V1");
             });
 
             app.UseMvc();

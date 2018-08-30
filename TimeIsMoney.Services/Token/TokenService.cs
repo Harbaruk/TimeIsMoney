@@ -77,8 +77,8 @@ namespace TimeIsMoney.Services.Token
 
             // TODO Change expiration date
             var token = new JwtSecurityToken(
-              issuer: "appPTS",
-              audience: "PTS",
+              issuer: _options.Value.ValidIssuer,
+              audience: _options.Value.ValidAudience,
               claims: claims,
               expires: DateTime.Now.AddDays(30),
               signingCredentials: creds);

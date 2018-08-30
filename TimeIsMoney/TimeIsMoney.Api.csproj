@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Policies\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
