@@ -18,28 +18,31 @@ namespace TimeIsMoney.Api.Providers
 
         public bool IsAuthenticated
         {
-            get {
+            get
+            {
                 ClaimsPrincipal principal = _httpContext.HttpContext.User;
                 return principal?.Identity?.IsAuthenticated ?? false;
             }
         }
 
-        public int UserId
+        public Guid UserId
         {
-            get {
+            get
+            {
                 var user = _httpContext.HttpContext.User;
                 if (!(user?.Identity?.IsAuthenticated) ?? false)
                 {
-                    return 0;
+                    return default(Guid);
                 }
                 string id = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid).Value;
-                return Int32.Parse(id);
+                return Guid.Parse(id);
             }
         }
 
         public string Name
         {
-            get {
+            get
+            {
                 var user = _httpContext.HttpContext.User;
                 return user?.Identity?.IsAuthenticated ?? false
                     ? user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value
@@ -49,7 +52,8 @@ namespace TimeIsMoney.Api.Providers
 
         public string Email
         {
-            get {
+            get
+            {
                 var user = _httpContext.HttpContext.User;
                 return user?.Identity?.IsAuthenticated ?? false
                     ? user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value
@@ -59,7 +63,8 @@ namespace TimeIsMoney.Api.Providers
 
         public Role UserType
         {
-            get {
+            get
+            {
                 var user = _httpContext.HttpContext.User;
                 return user?.Identity?.IsAuthenticated ?? false
                     ? (Role)Enum.Parse(typeof(Role), user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value)

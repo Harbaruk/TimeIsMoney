@@ -8,6 +8,8 @@ namespace TimeIsMoney.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<ConfirmationCodeEntity> builder)
         {
+            builder.ToTable("ConfirmationCodes");
+
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Code).IsRequired();
             builder.Property(x => x.ExpiresAt).IsRequired();

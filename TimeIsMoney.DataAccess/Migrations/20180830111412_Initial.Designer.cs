@@ -11,9 +11,10 @@ using TimeIsMoney.DataAccess;
 namespace TimeIsMoney.DataAccess.Migrations
 {
     [DbContext(typeof(TimeInMoneyContext))]
-    partial class TimeInMoneyContextModelSnapshot : ModelSnapshot
+    [Migration("20180830111412_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

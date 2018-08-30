@@ -1,8 +1,11 @@
-﻿namespace TimeIsMoney.DataAccess.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace TimeIsMoney.DataAccess.Entities
 {
     public class UserEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Email { get; set; }
 
@@ -17,5 +20,9 @@
         public string Role { get; set; }
 
         public ConfirmationCodeEntity ConfirmationCode { get; set; }
+
+        public List<TransactionEntity> Transactions { get; set; }
+
+        public List<UserTransactionTypeRefEntity> TransactionTypes { get; set; }
     }
 }

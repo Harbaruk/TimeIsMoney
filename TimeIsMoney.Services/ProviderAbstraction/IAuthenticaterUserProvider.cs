@@ -1,4 +1,5 @@
-﻿using TimeIsMoney.Services.Enums;
+﻿using System;
+using TimeIsMoney.Services.Enums;
 
 namespace TimeIsMoney.Services.ProviderAbstraction
 {
@@ -6,7 +7,7 @@ namespace TimeIsMoney.Services.ProviderAbstraction
     {
         bool IsAuthenticated { get; }
         string Name { get; }
-        int UserId { get; }
+        Guid UserId { get; }
         string Email { get; }
         Role UserType { get; }
     }

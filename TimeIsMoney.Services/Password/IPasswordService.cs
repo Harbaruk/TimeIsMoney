@@ -8,6 +8,6 @@ namespace TimeIsMoney.Services.Password
 
         void ForgotPassword(ForgotPasswordModel forgotPassword);
 
-        void SetPassword(SetPasswordModel setPassword)
+        void SetPassword(SetPasswordModel setPassword);
     }
 }

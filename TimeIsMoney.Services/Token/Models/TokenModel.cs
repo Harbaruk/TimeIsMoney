@@ -8,7 +8,7 @@ namespace TimeIsMoney.Services.Token.Models
         public string AccessToken { get; set; }
         public DateTimeOffset IssuedAt { get; set; }
         public DateTimeOffset ExpiresAt { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public Role Role { get; set; }
     }
 }

@@ -8,6 +8,8 @@ namespace TimeIsMoney.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
+            builder.ToTable("Users");
+
             builder
                 .HasKey(x => x.Id);
 
@@ -18,6 +20,7 @@ namespace TimeIsMoney.DataAccess.Configurations
             builder.Property(x => x.Role).IsRequired();
             builder.Property(x => x.Email).IsRequired();
             builder.HasOne(x => x.ConfirmationCode).WithOne(x => x.User);
+            builder.HasMany(x => x.Transactions).WithOne(x => x.Owner);
         }
     }
 }
